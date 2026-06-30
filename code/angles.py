@@ -82,7 +82,7 @@ def abduction_bonelength(shoulder2, hip2, elbow2,
     return _angle_between(trunk3, arm3)
 
 
-# --- Condition 4: 3D WORLD LANDMARKS (the ceiling) ----------------------------
+# --- Condition 4: 3D WORLD LANDMARKS (the reference) ----------------------------
 
 def abduction_3d(shoulder3, hip3, elbow3) -> float:
     """Condition 4: angle computed directly from 3D world landmarks."""

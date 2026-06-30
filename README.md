@@ -31,7 +31,7 @@ python analyze.py            # synthetic
 ```
 
 ## Key results (real, azimuth ≤ 60°, n = 216 clips, 8 subjects)
-Raw 2D MAE 14.6° → bone-length correction 11.2° → 3D ceiling 10.7°; reduction
+Raw 2D MAE 14.6° → bone-length correction 11.2° → 3D reference 10.7°; reduction
 3.4° (23%), 95% CI 2.2–4.7°, paired t-test p < 0.001; improvement held for all
 8 subjects (subject-level sign test p = 0.008).
 

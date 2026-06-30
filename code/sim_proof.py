@@ -127,7 +127,7 @@ def run_block(title, mode, noise2d=0.0, noise3d=0.0, reps=1, seed=42):
 
 if __name__ == "__main__":
     print("Synthetic proof-of-concept: shoulder-abduction angle vs camera azimuth")
-    print("Methods: baseline_nose (app), 2d_trunk (anat. fix), bonelength (ours), 3d_world (ceiling)")
+    print("Methods: baseline_nose (app), 2d_trunk (anat. fix), bonelength (ours), 3d_world (reference)")
 
     mae_o = run_block("BLOCK 1 — ORTHOGRAPHIC, no noise (clean theory)", "ortho")
     mae_p = run_block("BLOCK 2 — PERSPECTIVE (d=2.0 m), no noise (realistic distortion)", "persp")

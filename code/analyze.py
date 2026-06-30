@@ -30,7 +30,7 @@ METHODS = ["baseline_nose", "2d_trunk", "bonelength", "3d_world"]
 LABELS = {"baseline_nose": "baseline (nose-ref, app)",
           "2d_trunk": "2D trunk-ref",
           "bonelength": "bone-length correction (ours)",
-          "3d_world": "3D world landmarks (ceiling)"}
+          "3d_world": "3D reference (world landmarks)"}
 # Colorblind-safe (Okabe-Ito) palette + distinct markers; avoids red/green pairing per JEI.
 STYLE = {"baseline_nose": ("#999999", "o"),
          "2d_trunk":      ("#E69F00", "s"),
@@ -145,7 +145,7 @@ def data_efficiency(df: pd.DataFrame, seed=42):
     plt.plot(sizes, ml_mae, marker="o", color="#E69F00", label="learned kNN correction (needs labeled data)")
     plt.axhline(bone_mae, color="#0072B2", ls="-", lw=2,
                 label=f"bone-length correction (ours, 0 training): {bone_mae:.1f}deg")
-    plt.axhline(d3_mae, color="#009E73", ls=":", lw=1.5, label=f"3D ceiling: {d3_mae:.1f}deg")
+    plt.axhline(d3_mae, color="#009E73", ls=":", lw=1.5, label=f"3D reference: {d3_mae:.1f}deg")
     plt.xscale("log")
     plt.xlabel("ML training-set size (labeled clips)")
     plt.ylabel("test MAE (deg)")
@@ -183,7 +183,7 @@ def run(df, out_dir, label):
     print(f"\nData efficiency: ML kNN test-MAE by training size:")
     for s, e in zip(sizes, ml_mae):
         print(f"    n={s:>5}: {e:5.2f} deg")
-    print(f"    bone-length (0 training): {bone_mae:.2f} deg | 3D ceiling: {d3:.2f} deg")
+    print(f"    bone-length (0 training): {bone_mae:.2f} deg | 3D reference: {d3:.2f} deg")
     print(f"\nfigures saved to ./{OUT}/")
 
 
