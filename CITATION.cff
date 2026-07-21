@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this dataset or code, please cite it as below."
+title: "Single-Camera Shoulder-Abduction Measurement: De-Identified Dataset and Analysis Code"
+authors:
+  - family-names: Wang
+    given-names: Ella
+  - family-names: Wang
+    given-names: Zhirong
+date-released: 2026-06-09
+url: "https://github.com/ellawang1001/shoulder-abduction-correction"
