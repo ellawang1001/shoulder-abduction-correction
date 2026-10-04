@@ -1,9 +1,4 @@
-# Keep CSV bytes unchanged and use consistent LF endings for source text.
-*.csv -text
+# Preserve published file bytes, including line endings, so SHA-256 manifests
+# remain valid when the repository is cloned on another operating system.
+* -text
 *.png binary
-*.svg -text
-*.py text eol=lf
-*.md text eol=lf
-*.json text eol=lf
-*.txt text eol=lf
-*.cff text eol=lf

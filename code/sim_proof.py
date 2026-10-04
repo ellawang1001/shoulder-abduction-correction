@@ -69,8 +69,10 @@ def render(scene: dict, phi: float, mode: str, noise2d: float = 0.0,
 
 
 def calibrate_lengths(mode: str):
-    """One-time frontal (phi=0) calibration of true segment lengths in image units,
-    exactly as a real study would calibrate from a frontal reference frame."""
+    """Original demonstration calibration: one noiseless frontal 90-degree pose.
+    The real sessions and revision sensitivity analysis use medians across six
+    frontal postures, as described in the revised manuscript and README.
+    """
     s = build_scene(90.0)
     lm2, _ = render(s, 0.0, mode)
     arm_len = np.linalg.norm(lm2["elbow"] - lm2["shoulder"])

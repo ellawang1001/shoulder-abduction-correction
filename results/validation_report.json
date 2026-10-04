@@ -1,0 +1,28 @@
+{
+  "all_passed": true,
+  "checks": {
+    "dataset_per_clip.csv unchanged": true,
+    "synthetic_dataset.csv unchanged": true,
+    "8 participants, 9 sessions, 270 clips": true,
+    "216 clips at azimuth <= 60": true,
+    "2d_trunk MAE matches reference and released observations": true,
+    "bonelength MAE matches reference and released observations": true,
+    "3d_world MAE matches reference and released observations": true,
+    "Primary sign test": true,
+    "Eight participants at each plotted azimuth": true,
+    "Complete sensitivity grid": true,
+    "Identical test landmarks across calibration offsets: baseline_nose": true,
+    "Identical test landmarks across calibration offsets: 2d_trunk": true,
+    "Identical test landmarks across calibration offsets: 3d_world": true,
+    "Sensitivity result -10": true,
+    "Sensitivity result -5": true,
+    "Sensitivity result 0": true,
+    "Sensitivity result 5": true,
+    "Sensitivity result 10": true,
+    "Figure 1 PNG and SVG available": true,
+    "Figure 2 PNG and SVG available": true,
+    "Figure 3 PNG and SVG available": true,
+    "Figure 4 PNG and SVG available": true
+  },
+  "scope": "CSV-based statistics and figure reproduction; no raw-video re-extraction or online upload."
+}

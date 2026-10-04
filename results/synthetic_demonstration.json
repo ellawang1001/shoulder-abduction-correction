@@ -1,0 +1,20 @@
+{
+  "orthographic": {
+    "baseline_nose": null,
+    "2d_trunk": null,
+    "bonelength": 6.8212102632969615e-15,
+    "3d_world": 4.973799150320701e-15
+  },
+  "perspective": {
+    "baseline_nose": null,
+    "2d_trunk": null,
+    "bonelength": 2.5423001161526515,
+    "3d_world": 4.973799150320701e-15
+  },
+  "noisy_condition_mean_error": {
+    "baseline_nose": 83.22207341882131,
+    "2d_trunk": 11.30369546810472,
+    "bonelength": 3.7188670139986426,
+    "3d_world": 0.2012832258553405
+  }
+}

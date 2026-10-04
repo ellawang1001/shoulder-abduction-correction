@@ -1,0 +1,10 @@
+person,subject_id,round,studied_side,clips
+A,1,1,R,30
+A,3,2,R,30
+B,2,1,R,30
+C,4,1,R,30
+D,5,1,L,30
+E,6,1,L,30
+F,7,1,R,30
+G,8,1,R,30
+H,9,1,R,30

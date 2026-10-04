@@ -1,16 +1,18 @@
 """
 pose_extract.py — run MediaPipe Pose on each clip in ./video and produce
 real_estimates.csv (one row per clip, same schema as dataset.generate_synthetic),
-so analyze.py regenerates the same tables/figures on REAL data.
+Included for processing provenance; not needed for CSV-based reproduction.
 
-Config mirrors the app exactly: model_complexity=1, smooth_landmarks=True,
-enable_segmentation=False, min_detection/tracking_confidence=0.5, visibility<0.5
-frames dropped. 2D angles use PIXEL coords (x*W, y*H) to fix aspect-ratio
+The Tasks API full model uses detection/presence/tracking thresholds of 0.5.
+All pose-detected frames contribute; no visibility-threshold filter is executed.
+2D angles use PIXEL coords (x*W, y*H) to fix aspect-ratio
 distortion; the 3D condition uses MediaPipe world landmarks.
 
 Filename convention: subjNN_ang{deg}_az{deg}_r{rep}.mp4
-Upper-arm length (subject): 38 cm (recorded as metadata; the bone-length
-correction is calibrated from the az=0 frontal frames in image units).
+The 38 cm tape measurement belongs to participant A (sessions 1 and 3).
+The constant below is historical descriptive metadata, not a measured length
+for every participant or an input to the correction. Calibration uses the
+median projected length across frontal clip-median coordinates per session.
 """
 from __future__ import annotations
 import os, re, glob, urllib.request
@@ -26,7 +28,7 @@ VIDEO_DIR = "video"
 ARM_LEN_CM = 38.0
 LM = {"nose": 0, "Lsh": 11, "Rsh": 12, "Lel": 13, "Rel": 14,
       "Lhip": 23, "Rhip": 24, "Lwr": 15, "Rwr": 16}
-VIS_TH = 0.5
+VIS_TH = 0.5  # Historical unused constant; no visibility exclusion was applied.
 
 # Tasks API: full model ~= app's modelComplexity=1
 MODEL_PATH = "models/pose_landmarker_full.task"

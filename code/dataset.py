@@ -3,9 +3,8 @@ dataset.py — build a tidy clip-level table from the synthetic projection model
 
 Mirrors the real pipeline: each row = one captured "clip" with its true angle
 and the four estimator outputs, plus observable 2D features for the ML baseline.
-When real data arrives, replace generate_synthetic() with a loader for
-truth.csv + the per-clip estimates from pose_extract/angles, and the rest of the
-analysis (analyze.py) is unchanged.
+This helper generates the original 2,100-trial simulation. The revision workflow
+loads the released CSVs without rewriting them; see revision_analysis.py.
 """
 from __future__ import annotations
 import numpy as np
