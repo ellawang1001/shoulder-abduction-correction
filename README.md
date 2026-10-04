@@ -1,40 +1,56 @@
-# Reducing camera-angle error in single-camera shoulder abduction measurement with a geometric correction — data and code
+# Foreshortening contributes to camera-angle error in static single-camera shoulder abduction measurement
 
-This repository accompanies the manuscript and lets anyone reproduce every number
-and figure. No raw video is included (videos were not retained beyond extraction,
-to protect participants); the released data are per-clip angle measurements.
-
-## Contents
-- `dataset_per_clip.csv` — real data, 270 clips, 8 subjects (see DATA_DICTIONARY.md).
-- `synthetic_dataset.csv` — synthetic projection-model data (2100 rows).
-- `DATA_DICTIONARY.md` — column definitions.
-- `code/` — Python analysis pipeline.
-
-## Code
-- `angles.py` — the four angle estimators (baseline nose-ref, raw 2D trunk-ref, bone-length correction, 3D world).
-- `metrics.py` — error metrics, ICC(2,1), Bland–Altman, bootstrap CI (pure numpy).
-- `sim_proof.py`, `dataset.py` — synthetic projection model and synthetic dataset generation.
-- `pose_extract.py`, `extract_users.py` — run MediaPipe on videos to produce the per-clip CSVs (needs the raw videos, not included).
-- `combine_8subj.py` — builds the 8-subject table and prints all reported statistics.
-- `analyze.py` — produces the metrics tables and figures from a per-clip CSV.
+Data and analysis code accompanying the revised JEI manuscript by Ella Wang and Zhirong Wang. This deposit reproduces the statistical analyses and four figures from the released clip-level data. Raw participant videos are not publicly distributed. Their absence from this deposit does not mean that they were deleted.
 
 ## Reproduce
-```
-pip install numpy pandas matplotlib mediapipe opencv-contrib-python
-# statistics + tables (from the released CSV):
-python combine_8subj.py
-# figures (real):
-python analyze.py real dataset_per_clip.csv figures_out
-# synthetic theory + data-efficiency figures:
-python sim_proof.py
-python analyze.py            # synthetic
+
+From this directory:
+
+```powershell
+python -m pip install -r requirements.txt
+python -B code/reproduce.py
 ```
 
-## Key results (real, azimuth ≤ 60°, n = 216 clips, 8 subjects)
-Raw 2D MAE 14.6° → bone-length correction 11.2° → 3D reference 10.7°; reduction
-3.4° (23%), 95% CI 2.2–4.7°, paired t-test p < 0.001; improvement held for all
-8 subjects (subject-level sign test p = 0.008).
+The pinned package versions were tested with Python 3.14. Scripts resolve their input and output paths relative to this directory, so they also work when invoked from another working directory. CSV-based reproduction needs only NumPy, pandas, and matplotlib; it does not require MediaPipe, OpenCV, Microsoft Word, private videos, a downloaded pose model, or files elsewhere in the authors' workspace.
 
-## Ethics
-Adult participants gave informed consent; data are de-identified; no medical
-intervention was performed.
+The command regenerates statistics, the calibration sensitivity experiment, Figures 1–4, and the original synthetic demonstration log, then checks data hashes and key results. It does not rewrite the two input CSVs. Existing files with the same names inside results/ and figures/ are regenerated.
+
+## Contents
+
+- `dataset_per_clip.csv`: unchanged real-video data, 270 clips from eight adults in nine sessions. Participant A has two sessions.
+- `synthetic_dataset.csv`: unchanged original noisy simulation, 2,100 trials.
+- `DATA_DICTIONARY.md`: column definitions, reference targets, session mapping, and processing details.
+- `code/reproduce.py`: complete CSV-based reproduction command.
+- `code/revision_analysis.py`: revised statistics, individual results, offset analysis, calibration sensitivity, and Figures 2–4.
+- `code/make_fig1.py`: revised geometric schematic.
+- `code/angles.py`, `metrics.py`, `sim_proof.py`, `dataset.py`: estimator, statistical, and simulation helpers.
+- `code/analyze.py`, `combine_8subj.py`: compatibility entry points for the revised reproduction workflow. They no longer require nine unpublished session CSVs.
+- `code/pose_extract.py`, `extract_users.py`: original extraction logic retained as provenance, not part of CSV-based reproduction. Extraction would require private videos, a model, and a separate compatible MediaPipe/OpenCV environment. Comments about visibility were corrected without changing extraction logic.
+- `results/`: statistics, participant results, simulation outputs, runtime environment, and validation report.
+- `figures/`: revised Figures 1–4 in PNG (300 dpi) and SVG format.
+- `CHANGELOG.md`: revision changes and unchanged input hashes.
+- `CITATION.cff`: citation metadata for the dataset and code.
+
+## Repository and archive
+
+Repository: https://github.com/ellawang1001/shoulder-abduction-correction
+
+OSF project: https://osf.io/8a3rw/
+
+The public analysis layout is the same for this repository and the revised OSF deposit. The two input CSVs retain their original names and contents. Git history and local environment folders are excluded from the generated file manifest. Signed forms, editorial correspondence, and manuscript-review documents are not part of this repository.
+
+## Analysis conventions
+
+The primary improvement test uses eight participant-mean error differences, a two-sided sign test, and a participant bootstrap. Pooled MAE and ICC confidence intervals use 10,000 participant-cluster bootstrap samples, seed 42; all clips and both sessions for participant A stay together. Original per-clip intervals for paired improvements are exploratory. Pooled estimates weight clips equally, whereas Figure 3 weights participants equally.
+
+At camera azimuths ≤ 60° (216 clips), pooled MAE is 14.6° for raw 2D, 11.2° after correction, and 10.7° for the 3D reference. All eight participants improved; the primary sign-test p-value is 0.008 after rounding. See results/statistics.json for unrounded values and confidence intervals.
+
+The initial noisy `sim_proof.py` demonstration averages angle estimates within each condition before calculating absolute error. Figure 2 and the new calibration sensitivity experiment instead use per-trial MAE on their specified grids. These quantities are not interchangeable. Undefined raw/baseline angles for a degenerate clean projection are recorded as null in the demonstration JSON and nan in its text log.
+
+Sensitivity calibration uses median projected lengths across six noiseless postures at 0°, ±5°, and ±10° camera azimuth. Test landmarks and their noise remain identical across offsets. The summary includes 4,800 trials at test azimuths ≤ 60° per calibration; these are simulated observations, not additional participants.
+
+All pose-detected frames contributed to the original clip-median coordinates; no visibility-threshold exclusion was applied. Calibration was session-specific, using six frontal clips. The nose baseline is an app-derived reference-choice comparator and is not presented as a clinically validated shoulder-abduction measure. Physical upper-arm length of 38 cm was measured for participant A and was not an input to the correction.
+
+## Scope and ethics
+
+Adult participants provided informed consent. Released measurements are de-identified; no medical intervention was performed. This public deposit excludes raw videos, signed forms, editorial correspondence, and private review documents. Re-extracting landmarks from videos is outside the self-contained CSV-based workflow.

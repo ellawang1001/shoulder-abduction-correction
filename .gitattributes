@@ -1,0 +1,9 @@
+# Keep CSV bytes unchanged and use consistent LF endings for source text.
+*.csv -text
+*.png binary
+*.svg -text
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.txt text eol=lf
+*.cff text eol=lf

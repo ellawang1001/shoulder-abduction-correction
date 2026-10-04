@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.DS_Store
+Thumbs.db
+~$*
+
+# Private recordings and downloaded extraction models are not public inputs.
+video/
+video-org/
+models/
+*.MOV
+*.mov
+*.mp4
