@@ -1,0 +1,92 @@
+{
+  "depth_sign": {
+    "max_original_angle_reconstruction_error": 1.2168044349891716e-13,
+    "pooled": [
+      {
+        "range": "azimuth_le_60",
+        "person": "pooled",
+        "clips": 216,
+        "same_sign_mae": 11.155076326391747,
+        "opposite_sign_mae": 10.878989615640846,
+        "mean_angle_change": 2.586773700044086,
+        "max_angle_change": 51.112886807939546
+      },
+      {
+        "range": "azimuth_90",
+        "person": "pooled",
+        "clips": 54,
+        "same_sign_mae": 29.8961884808642,
+        "opposite_sign_mae": 12.527196063540693,
+        "mean_angle_change": 25.260953853225065,
+        "max_angle_change": 120.39101374563025
+      },
+      {
+        "range": "all",
+        "person": "pooled",
+        "clips": 270,
+        "same_sign_mae": 14.903298757286237,
+        "opposite_sign_mae": 11.208630905220817,
+        "mean_angle_change": 7.121609730680281,
+        "max_angle_change": 120.39101374563025
+      }
+    ],
+    "interpretation": "Fixed global sign alternatives; no target-based per-clip selection. Sensitivity analysis, not validation of physical depth signs or an optimized estimator."
+  },
+  "calibration": {
+    "all_30000_trials_match": true,
+    "details": [
+      {
+        "calibration_azimuth": -10,
+        "arm_length": 0.1515385932892937,
+        "trunk_length": 0.25,
+        "corrected_mae": 5.035963701903152,
+        "max_saved_trial_difference": 2.842170943040401e-14,
+        "mean_signed_error": -1.4980922826733085,
+        "mean_angle_shift_vs_zero": 0.05398607265602024,
+        "lower_absolute_error_trials_vs_zero": 1255
+      },
+      {
+        "calibration_azimuth": -5,
+        "arm_length": 0.1510642280027663,
+        "trunk_length": 0.25,
+        "corrected_mae": 4.920497789958384,
+        "max_saved_trial_difference": 2.842170943040401e-14,
+        "mean_signed_error": -1.5251357886850274,
+        "mean_angle_shift_vs_zero": 0.02694256664430127,
+        "lower_absolute_error_trials_vs_zero": 1245
+      },
+      {
+        "calibration_azimuth": 0,
+        "arm_length": 0.15,
+        "trunk_length": 0.25,
+        "corrected_mae": 4.698185599455196,
+        "max_saved_trial_difference": 2.842170943040401e-14,
+        "mean_signed_error": -1.5520783553293287,
+        "mean_angle_shift_vs_zero": 0.0,
+        "lower_absolute_error_trials_vs_zero": 0
+      },
+      {
+        "calibration_azimuth": 5,
+        "arm_length": 0.1483909634571419,
+        "trunk_length": 0.25,
+        "corrected_mae": 4.426388400325988,
+        "max_saved_trial_difference": 2.842170943040401e-14,
+        "mean_signed_error": -1.546506842429752,
+        "mean_angle_shift_vs_zero": 0.0055715128995770516,
+        "lower_absolute_error_trials_vs_zero": 2545
+      },
+      {
+        "calibration_azimuth": 10,
+        "arm_length": 0.14626759956411683,
+        "trunk_length": 0.25,
+        "corrected_mae": 4.22689446284164,
+        "max_saved_trial_difference": 2.842170943040401e-14,
+        "mean_signed_error": -1.4321982008865004,
+        "mean_angle_shift_vs_zero": 0.11988015444282828,
+        "lower_absolute_error_trials_vs_zero": 2431
+      }
+    ],
+    "direction": "For body X>0, positive phi gives rotated Z=-X*sin(phi); the pinhole denominator is 2-Z. The modeled right arm moves farther from the camera. Positive offsets reduce calibrated arm length; trunk calibration remains 0.25 image units.",
+    "estimator": "Same angles.abduction_bonelength function and positive depth signs as real analysis; synthetic coordinates use normalized image units consistently, real coordinates use pixels."
+  }
+}
