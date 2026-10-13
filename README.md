@@ -1,50 +1,61 @@
-# Revised shoulder-abduction analysis
+# Foreshortening contributes to camera-angle error in static single-camera shoulder abduction measurement
 
-This directory contains the unchanged de-identified CSV inputs and the analysis used for the JEI revision. The original submission is preserved separately in `../02_review/original/`.
+Data and analysis code accompanying the revised JEI manuscript by Ella Wang and Zhirong Wang. This deposit reproduces the statistical analyses and four figures from the released clip-level data. Raw participant videos are not publicly distributed. Their absence from this deposit does not mean that they were deleted.
 
-## Reproduce the revision
+## Reproduce
 
-From this directory, with Python and the packages listed in `requirements.txt`:
+From this directory:
 
 ```powershell
-python code/revision_analysis.py
-python -B code/sensitivity_audit.py
-python code/make_fig1.py
-python code/build_manuscript.py
-python code/build_handoff.py
-powershell -NoProfile -ExecutionPolicy Bypass -File code/export_pdf_isolated.ps1
-python code/validate_package.py
-python code/make_public_archive.py
-python code/finalize_package.py
+python -m pip install -r requirements.txt
+python -B code/reproduce.py
 ```
 
-Scripts locate inputs relative to their own paths, so the working directory is not significant. PDF export requires Microsoft Word on Windows. The analysis and plots do not require Word, MediaPipe, raw videos, or a downloaded pose model. `results/build_environment.json` records the tested package versions. The final command refreshes the file manifest after PDF export and validation.
+The pinned package versions were tested with Python 3.14. Scripts resolve their input and output paths relative to this directory, so they also work when invoked from another working directory. CSV-based reproduction needs only NumPy, pandas, and matplotlib; it does not require MediaPipe, OpenCV, Microsoft Word, private videos, a downloaded pose model, or files elsewhere in the authors' workspace.
+
+The command regenerates statistics, the calibration sensitivity experiment, Figures 1–4, and the original synthetic demonstration log, then checks data hashes and key results. It does not rewrite the two input CSVs. Existing files with the same names inside results/ and figures/ are regenerated.
 
 ## Contents
 
-- `data/real_estimates_8subj.csv`: original 270 clip-level observations, unchanged.
-- `data/synthetic_dataset.csv`: original 2,100 noisy synthetic observations, unchanged.
-- `code/angles.py`, `metrics.py`, `sim_proof.py`, `dataset.py`: original estimator, metric, and simulation helpers.
-- `code/revision_analysis.py`: participant statistics, cluster confidence intervals, offset analysis, calibration sensitivity, and Figures 2–4.
-- `code/make_fig1.py`: revised schematic.
-- `source/manuscript_revised.md`: manuscript source; tables are included here.
-- `source/reviewer_responses.json`: authored response text and exact pointers into the editor's original comments.
-- `source/figures/`: vector SVG and high-resolution TIFF copies; submission PNGs are in `../01_submission/figures/`.
-- `source/tables/`: separate CSV and Word versions of the manuscript tables.
-- `results/`: machine-readable numerical outputs, including every new simulated observation.
+- `dataset_per_clip.csv`: unchanged real-video data, 270 clips from eight adults in nine sessions. Participant A has two sessions.
+- `synthetic_dataset.csv`: unchanged original noisy simulation, 2,100 trials.
+- `DATA_DICTIONARY.md`: column definitions, reference targets, session mapping, and processing details.
+- `code/reproduce.py`: complete CSV-based reproduction command.
+- `code/revision_analysis.py`: revised statistics, individual results, offset analysis, calibration sensitivity, and Figures 2–4.
+- `code/make_fig1.py`: revised geometric schematic.
+- `code/angles.py`, `metrics.py`, `sim_proof.py`, `dataset.py`: estimator, statistical, and simulation helpers.
+- `code/analyze.py`, `combine_8subj.py`: compatibility entry points for the revised reproduction workflow. They no longer require nine unpublished session CSVs.
+- `code/pose_extract.py`, `extract_users.py`: original extraction logic retained as provenance, not part of CSV-based reproduction. Extraction would require private videos, a model, and a separate compatible MediaPipe/OpenCV environment. Comments about visibility were corrected without changing extraction logic.
+- `results/`: statistics, participant results, simulation outputs, runtime environment, and validation report.
+- `figures/`: revised Figures 1–4 in PNG (300 dpi) and SVG format.
+- `CHANGELOG.md`: revision changes and unchanged input hashes.
+- `CITATION.cff`: citation metadata for the dataset and code.
+
+## Repository and archive
+
+Repository: https://github.com/ellawang1001/shoulder-abduction-correction
+
+OSF project: https://osf.io/8a3rw/
+
+The public analysis layout is the same for this repository and the revised OSF deposit. The two input CSVs retain their original names and contents. Git history and local environment folders are excluded from the generated file manifest. Signed forms, editorial correspondence, and manuscript-review documents are not part of this repository.
 
 ## Analysis conventions
 
-The primary comparison uses one mean error difference per participant. Participant A's two sessions remain one participant. Pooled MAE weights clips equally, so participant A contributes twice as many clips as each other participant. Figure 3 weights participants equally. Confidence intervals for pooled MAE and ICC resample eight participant clusters, retaining all their clips, using 10,000 percentile-bootstrap samples and seed 42. Original per-clip improvement intervals are descriptive/exploratory.
+The primary improvement test uses eight participant-mean error differences, a two-sided sign test, and a participant bootstrap. Pooled MAE and ICC confidence intervals use 10,000 participant-cluster bootstrap samples, seed 42; all clips and both sessions for participant A stay together. Original per-clip intervals for paired improvements are exploratory. Pooled estimates weight clips equally, whereas Figure 3 weights participants equally.
 
-The initial `sim_proof.py` noisy demonstration computes the error of the mean estimate within each condition. Figure 2 and the added sensitivity experiment compute the mean absolute error of individual trials. Their grids differ and their aggregate errors are not interchangeable. The manuscript states these distinctions.
+At camera azimuths ≤ 60° (216 clips), pooled MAE is 14.6° for raw 2D, 11.2° after correction, and 10.7° for the 3D reference. All eight participants improved; the primary sign-test p-value is 0.008 after rounding. See results/statistics.json for unrounded values and confidence intervals.
 
-Sensitivity calibration uses median projected lengths from six noiseless postures at each specified calibration azimuth. Test landmarks, including their noise, are identical across offsets. Positive and negative offsets use `sim_proof._Ry`'s rotation convention. Real observations are not modified.
+The initial noisy `sim_proof.py` demonstration averages angle estimates within each condition before calculating absolute error. Figure 2 and the new calibration sensitivity experiment instead use per-trial MAE on their specified grids. These quantities are not interchangeable. Undefined raw/baseline angles for a degenerate clean projection are recorded as null in the demonstration JSON and nan in its text log.
 
-## Limits of this reproducibility package
+Sensitivity calibration uses median projected lengths across six noiseless postures at 0°, ±5°, and ±10° camera azimuth. Test landmarks and their noise remain identical across offsets. The summary includes 4,800 trials at test azimuths ≤ 60° per calibration; these are simulated observations, not additional participants.
 
-`pose_extract.py` is included for provenance. It is not a self-contained raw-video reproduction workflow: running it requires the original videos, a MediaPipe model file, OpenCV, and the appropriate MediaPipe environment. Identifiable videos are not part of this public-analysis package. The code did not execute a visibility-threshold filter; all detected-pose frames contributed to coordinate medians. Existing CSVs are sufficient to reproduce the revised statistical results and figures.
+All pose-detected frames contributed to the original clip-median coordinates; no visibility-threshold exclusion was applied. Calibration was session-specific, using six frontal clips. The nose baseline is an app-derived reference-choice comparator and is not presented as a clinically validated shoulder-abduction measure. Physical upper-arm length of 38 cm was measured for participant A and was not an input to the correction.
 
-The public GitHub and OSF links refer to the existing deposits. Earlier revision materials were uploaded according to the project record. The 2026-10-14 depth-sign analysis and calibration audit have only been staged locally and require public synchronization before resubmission; response P16 records this pending action. Do not publish the editor's letter, school approval signatures, consent documents, or the whole submission package. Document-building scripts refer to private editorial materials and should be omitted from a public analysis-only deposit unless adapted.
+## Scope and ethics
 
-`code/sensitivity_audit.py` reconstructs the original corrected angles from saved projected lengths, raw 2D angles, and session-specific frontal calibration, then compares fixed same-sign and opposite-sign depth assignments. It also recomputes all 30,000 Table 4 estimates and compares them with the saved trials. Outputs are `results/depth_sign_trials.csv`, `depth_sign_summary.csv`, and `sensitivity_audit.json`. There is no target-based per-clip sign selection, no change to the original estimator or inputs, and no independent validation of the alternative signs.
+Adult participants provided informed consent. Released measurements are de-identified; no medical intervention was performed. This public deposit excludes raw videos, signed forms, editorial correspondence, and private review documents. Re-extracting landmarks from videos is outside the self-contained CSV-based workflow.
+
+
+## Additional sensitivity analysis (2026-10-14)
+
+Run `python -B code/sensitivity_audit.py` to reproduce the fixed same-sign versus opposite-sign comparison from the original CSV and to recompute all Table 4 trials. Results are in `results/depth_sign_trials.csv`, `depth_sign_summary.csv`, and `sensitivity_audit.json`. The alternative signs are an exploratory check, not an independently validated estimator.

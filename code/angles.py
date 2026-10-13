@@ -65,7 +65,7 @@ def _lift_segment(p2_distal: np.ndarray, p2_vertex: np.ndarray,
     d2 = np.asarray(p2_distal, float)[:2] - np.asarray(p2_vertex, float)[:2]
     p = np.linalg.norm(d2)
     z2 = true_len * true_len - p * p
-    z = sign * np.sqrt(z2) if z2 > 0 else 0.0  # clamp: limb pointing at camera
+    z = sign * np.sqrt(z2) if z2 > 0 else 0.0  # Zero inferred depth when projected length reaches or exceeds calibration.
     return np.array([d2[0], d2[1], z])
 
 
@@ -76,7 +76,9 @@ def abduction_bonelength(shoulder2, hip2, elbow2,
     foreshortened 2D segment to its known true length to recover the 3D
     direction (camera frame), then take the frame-invariant angle between them.
     `arm_len`/`trunk_len` are the true segment lengths in the SAME units as the
-    2D coords (obtained by a one-time frontal calibration frame)."""
+    2D coords. Real-video calibration uses the median segment length across
+    six frontal clip-median landmark sets per recording session; synthetic
+    calibration is specified separately in the simulation routines."""
     arm3 = _lift_segment(elbow2, shoulder2, arm_len, arm_sign)
     trunk3 = _lift_segment(hip2, shoulder2, trunk_len, trunk_sign)
     return _angle_between(trunk3, arm3)

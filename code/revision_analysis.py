@@ -97,56 +97,9 @@ stable.to_csv(OUT/'calibration_sensitivity_summary.csv')
 summary['calibration_sensitivity']=stable.to_dict(orient='index')
 (OUT/'statistics.json').write_text(json.dumps(summary,indent=2),encoding='utf-8')
 
-plt.rcParams.update({'font.family':'DejaVu Sans','font.size':10,'axes.spines.top':False,'axes.spines.right':False})
-def save(fig,n):
-    for ext in ['png','svg']:
-        fig.savefig(FIG/f'fig{n}.{ext}',dpi=300,bbox_inches='tight')
-    plt.close(fig)
-
-fig=plt.figure(figsize=(10,4.2),layout='constrained')
-ax=fig.add_subplot(121,projection='3d')
-scene=build_scene(60)
-for key,c in [('hip','#444444'),('elbow',colors[2])]:
-    p=scene[key];ax.plot([0,p[0]],[0,p[2]],[0,p[1]],color=c,lw=3)
-    ax.text(p[0],p[2],p[1],key,fontsize=9)
-phi=np.linspace(0,np.pi/2,60)
-ax.plot(.55*np.sin(phi),.55*np.cos(phi),np.zeros(60),color='#777777',ls='--')
-for deg in [0,30,45,60,90]:
-    p=np.radians(deg);x,z=.55*np.sin(p),.55*np.cos(p)
-    ax.scatter(x,z,0,color='#333333',s=16);ax.text(x,z,.035,f'{deg}°',fontsize=8)
-ax.text(0,0,.035,'shoulder',fontsize=9)
-ax.set(xlabel='Lateral (m)',ylabel='Anterior (m)',title='A  Synthetic arm and camera azimuth')
-ax.text2D(.02,.78,'Vertical (m)',transform=ax.transAxes,fontsize=9)
-ax.view_init(20,35)
-ax.text2D(.03,-.07,'Arm moves in the coronal plane; camera positions\nare schematic (simulated distance: 2 m).',transform=ax.transAxes,fontsize=8)
-ax=fig.add_subplot(122)
-for m,label,c in zip(METHODS,labels,colors):
-    s=syn.groupby('azimuth')['err_'+m].mean();ax.plot(s.index,s.values,'o-',label=label,color=c,ms=4)
-ax.set(xlabel='Camera azimuth (°)',ylabel='Mean absolute error (°)',title='B  Noisy perspective simulation',xticks=[0,15,30,45,60,75,90],ylim=(0,130))
-ax.legend(fontsize=8,frameon=False);save(fig,2)
-
-fig,axes=plt.subplots(1,2,figsize=(10,4.2),layout='constrained',sharex=True)
 g=df.groupby(['person','azimuth'])[['err_'+m for m in METHODS]].mean()
 g.to_csv(OUT/'figure3_participant_points.csv')
-for ax,methods,title in [(axes[0],METHODS,'A  All four estimators'),(axes[1],METHODS[1:],'B  Trunk-referenced estimators')]:
-    for m in methods:
-        j=METHODS.index(m);c=colors[j]
-        vals=g['err_'+m].unstack('azimuth').reindex(people)
-        az=vals.columns.to_numpy()
-        ax.errorbar(az,vals.mean(),yerr=vals.sem(),color=c,marker='o',ms=4,lw=1.5,capsize=3,label=labels[j])
-        for i,p in enumerate(people):
-            ax.scatter(az+(j-1.5)*.6+(i-3.5)*.3,vals.loc[p],s=13,alpha=.55,color=c,edgecolors='none')
-    ax.set(xlabel='Camera azimuth (°)',ylabel='Mean absolute error (°)',title=title,xticks=[0,30,45,60,90],ylim=(0,130 if ax is axes[0] else 65))
-    ax.legend(fontsize=8,frameon=False,loc='upper left')
-save(fig,3)
 
-fig,ax=plt.subplots(figsize=(7.5,4.5),layout='constrained')
-x=(main.bonelength+main.true_angle)/2;y=main.bonelength-main.true_angle
-ax.scatter(x,y,s=18,alpha=.6,color=colors[2])
-ba=summary['bland_altman']
-ax.axhline(ba['bias'],color='#333333',lw=1.5,label=f"Mean bias {ba['bias']:.1f}°")
-for key in ['loa_low','loa_high']:
-    ax.axhline(ba[key],color='#C44E52',ls='--',lw=1.3,label=f"95% limit {ba[key]:.1f}°")
-ax.set(xlabel='Mean of corrected and reference angles (°)',ylabel='Corrected − reference angle (°)',ylim=(-45,55))
-ax.legend(fontsize=9,loc='upper right',frameon=False);save(fig,4)
-print(json.dumps({'main':summary['main'],'zero_3d':zero['3d_world'].to_dict(),'offset':summary['offset_analysis'],'sensitivity':summary['calibration_sensitivity']},indent=2))
+# Render existing results at the manuscript width; numerical analysis above is unchanged.
+import runpy
+runpy.run_path(str(ROOT/'code/render_figures.py'), run_name='__main__')

@@ -16,7 +16,7 @@ OUT = ROOT / 'results'
 
 
 def sign_audit():
-    df = pd.read_csv(ROOT / 'data/real_estimates_8subj.csv')
+    df = pd.read_csv(ROOT / 'dataset_per_clip.csv')
     frontal = df[df.azimuth == 0]
     assert frontal.groupby('subject_id').size().eq(6).all()
     lengths = frontal.groupby('subject_id')[['feat_armlen', 'feat_trunklen']].median()
